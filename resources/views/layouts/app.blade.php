@@ -12,10 +12,13 @@
 
         <!-- Styles -->
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/vendor/select2/select2.min.css') }}">
 
         @livewireStyles
 
         <!-- Scripts -->
+        <script src="{{ asset('js/vendor/jquery/jquery-3.5.1.js') }}"></script>
+        <script src="{{ asset('js/vendor/select2/select2.min.js') }}"></script>
         <script src="{{ mix('js/app.js') }}" defer></script>
     </head>
     <body class="font-sans antialiased">
