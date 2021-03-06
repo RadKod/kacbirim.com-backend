@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\TagController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,11 +20,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('posts', PostController::class)->names([
-    'index' => 'posts',
-    'create' => 'posts.create'
-]);
-Route::get('/countries', [CountryController::class, 'index'])->name('countries');
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::resource('posts', PostController::class)->names([
+        'index' => 'posts',
+        'create' => 'posts.create'
+    ]);
+    Route::resource('countries', CountryController::class)->names([
+        'index' => 'countries'
+    ]);
+    Route::get('/tags/search', [TagController::class, 'search'])->name('tags.search');
+});
+
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');

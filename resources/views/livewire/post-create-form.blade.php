@@ -27,7 +27,7 @@
             @if ($image and !$errors->has('image'))
                 <div>
                     Photo Preview:
-                    <img src="{{ $image->temporaryUrl() }}" class="h-20 w-full object-cover">
+                    <img src="{{ $image->temporaryUrl() }}" class="h-40 w-full object-contain">
                 </div>
             @endif
         </div>
@@ -96,8 +96,9 @@
         });
     });
     document.addEventListener("livewire:load", function (event) {
-        window.livewire.hook('afterDomUpdate', () => {
-            $('.select2').select2();
-        });
+        $('.select2').select2();
+        // window.livewire.hook('afterDomUpdate', () => {
+        //     $('.select2').select2();
+        // });
     });
 </script>

@@ -17,11 +17,15 @@ class CreatePostCountryTable extends Migration
             $table->id();
             $table->unsignedBigInteger('post_id');
             $table->unsignedBigInteger('country_id');
-            $table->integer('minimum_wage');
+            $table->integer('minimum_wage')->nullable();
             $table->timestamps();
             // foreign keys
-            $table->foreign('post_id')->references('id')->on('posts');
-            $table->foreign('country_id')->references('id')->on('countries');
+            $table->foreign('post_id')->references('id')
+                ->on('posts')->onDelete('cascade');
+            $table->foreign('country_id')->references('id')
+                ->on('countries')->onDelete('cascade');
+
+            $table->unique(['post_id', 'country_id']);
         });
     }
 
