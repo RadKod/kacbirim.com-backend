@@ -136,6 +136,7 @@
                 });
 
                 tagify_country.on('remove', function (e) {
+                    console.log(e.detail.data)
                     @this.call('remove_city_id', e.detail.data.id);
                     @this.call('remove_city_name', e.detail.data.value);
                 });
@@ -204,8 +205,8 @@
                 });
                 window.livewire.on('postEdit', items => {
                     tagify_country.settings.whitelist.push(...items['countries'], ...tagify_country.value)
-                    tagify_tag.addTags(items['tags'])
                     tagify_country.addTags(items['countries'])
+                    tagify_tag.addTags(items['tags'])
                 })
             });
         </script>
