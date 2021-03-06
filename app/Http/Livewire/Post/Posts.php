@@ -89,12 +89,41 @@ class Posts extends Component
 
     public function create_or_update()
     {
-         dd($this->tags);
         if ($this->post_id) {
             $this->update();
         } else {
             $this->store();
         }
+    }
+
+    public function add_tag($val)
+    {
+        $this->tags[] = $val;
+    }
+
+    public function remove_tag($val)
+    {
+        unset($this->tags[array_search($val, $this->tags)]);
+    }
+
+    public function add_city_id($val)
+    {
+        $this->country_ids[] = $val;
+    }
+
+    public function add_city_name($val)
+    {
+        $this->country_names[] = $val;
+    }
+
+    public function remove_city_id($val)
+    {
+        unset($this->country_ids[array_search($val, $this->country_ids)]);
+    }
+
+    public function remove_city_name($val)
+    {
+        unset($this->country_names[array_search($val, $this->country_names)]);
     }
 
     public function edit($id)
@@ -113,24 +142,23 @@ class Posts extends Component
             $this->comparison_date = $post->comparison_date;
 
             $tags = [];
-            $tag_ids = [];
             $countries = [];
             foreach ($post->countries as $country) {
                 $this->country_wage[$country->country->id] = $country->minimum_wage;
-                $countries[] = $country->country->id;
+                $countries[] = [
+                    'id'=>$country->country->id,
+                    'value'=>$country->country->name,
+                    'code'=>$country->country->code,
+                    'currency'=>$country->country->currency,
+                ];
             }
             foreach ($post->tags as $tag) {
-                $this->tags[] = $tag->tag->name;
-                $tag_ids[] = $tag->tag->id;
-                $tags[] = [
-                    'id' => $tag->tag->id,
-                    'text' => $tag->tag->name
-                ];
+                // $this->tags[] = $tag->tag->name;
+                $tags[] = $tag->tag->name;
             }
 
             $this->emit('postEdit', [
                 'tags' => $tags,
-                'tag_ids' => $tag_ids,
                 'countries' => $countries
             ]);
         }
@@ -205,6 +233,7 @@ class Posts extends Component
         ]);
         $current_p_tag_ids = [];
         $current_p_country_ids = [];
+
         foreach ($this->tags as $tag) {
             $tag = Tags::query()->firstOrCreate(
                 ['name' => $tag, 'slug' => Str::slug($tag)]
@@ -213,7 +242,7 @@ class Posts extends Component
                 'post_id' => $post->id,
                 'tag_id' => $tag->id,
             ]);
-            $current_p_tag_ids[] = $post_tag->id;
+            $current_p_tag_ids[] = $post_tag->tag_id;
         }
         foreach ($this->country_ids as $country_id) {
             $m_wage = $this->country_wage[$country_id] ?? null;
@@ -223,12 +252,12 @@ class Posts extends Component
             ], [
                 'minimum_wage' => $m_wage
             ]);
-            $current_p_country_ids[] = $post_country->id;
+            $current_p_country_ids[] = $post_country->country_id;
         }
         PostTag::query()->where('post_id', $post->id)
-            ->whereNotIn('id', $current_p_tag_ids)->delete();
+            ->whereNotIn('tag_id', $current_p_tag_ids)->delete();
         PostCountry::query()->where('post_id', $post->id)
-            ->whereNotIn('id', $current_p_country_ids)->delete();
+            ->whereNotIn('country_id', $current_p_country_ids)->delete();
         $this->closeModal();
         session()->flash('message', 'Post Updated Successfully.');
         $this->resetInputFields();

@@ -29,6 +29,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         'index' => 'countries'
     ]);
     Route::get('/tags/search', [TagController::class, 'search'])->name('tags.search');
+    Route::get('/country/search', [CountryController::class, 'search'])->name('country.search');
 });
 
 

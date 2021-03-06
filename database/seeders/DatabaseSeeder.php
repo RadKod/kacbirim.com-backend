@@ -22,5 +22,6 @@ class DatabaseSeeder extends Seeder
              'email' => 'admin@admin.com',
              'password' => Hash::make('admin')
          ]);
+         resource_path('data/countries_in_turkish.json');
     }
 }

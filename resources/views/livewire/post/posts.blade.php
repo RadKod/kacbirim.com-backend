@@ -17,6 +17,7 @@
             <th>Title</th>
             <th>Unit</th>
             <th>Tags</th>
+            <th>Countries</th>
             <th>Action</th>
         </tr>
         </thead>
@@ -33,7 +34,14 @@
                 <td>
                     @foreach($post->tags as $tag)
                         <span class="badge badge-success">
-                            {{ $tag->tag->name }}
+                            {{ $tag->tag->name }}  {{ $tag->tag->id }}
+                        </span>
+                    @endforeach
+                </td>
+                <td>
+                    @foreach($post->countries as $country)
+                        <span class="badge badge-info">
+                            {{ $country->country->name }}
                         </span>
                     @endforeach
                 </td>

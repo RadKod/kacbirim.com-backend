@@ -67,13 +67,20 @@
                     <div class="form-group">
                         <div wire:ignore>
                             <label for="tags">Tags</label>
-                            <select wire:model="tags" name="tags[]" id="tags" class="form-control" multiple
-                                    style="width: 100%"></select>
+                            <input type="text" id="tags" placeholder="tags">
                         </div>
                         @error('tags') <span class="text-danger">{{ $message }}</span>@enderror
                     </div>
 
                     <div class="form-group">
+                        <div wire:ignore>
+                            <label for="country_ids">Countries</label>
+                            <input type="text" id="country_ids" class="countries" placeholder="countries">
+                        </div>
+                        @error('country_ids') <span class="text-danger">{{ $message }}</span>@enderror
+                    </div>
+
+                    {{--<div class="form-group">
                         <div wire:ignore>
                             <label for="country_ids">Countries</label>
                             <select wire:model="country_ids" name="country_ids[]" id="country_ids" class="form-control"
@@ -84,7 +91,7 @@
                             </select>
                         </div>
                         @error('country_ids') <span class="text-danger">{{ $message }}</span>@enderror
-                    </div>
+                    </div>--}}
 
                     @if($country_ids)
                         <fieldset class="post_salary">
@@ -101,33 +108,7 @@
                     @endif
                 </form>
             </div>
-            {{ implode(',', $tags) }}
-            <div x-data="{tags: $wire.tags, newTag: []}"
-                 class="bg-grey-lighter px-8 py-16 min-h-screen">
-                <template x-for="tag in tags">
-                    <input type="hidden" name="tags[]" :value="tag">
-                </template>
 
-                <div class="max-w-sm w-full mx-auto">
-                    <div class="tags-input">
-                        <template x-for="tag in tags" :key="tag">
-                            <span class="tags-input-tag">
-                                <span x-text="tag"></span>
-                                <button type="button" class="tags-input-remove"
-                                        @click="tags = tags.filter(i => i !== tag)">
-                                    &times;
-                                </button>
-                            </span>
-                        </template>
-
-                        <input class="tags-input-text" placeholder="Add tag..."
-                               @keydown.enter.prevent="if (newTag.trim() !== '') tags.push(newTag.trim()); newTag = ''"
-                               @keydown.backspace="if (newTag.trim() === '') tags.pop()"
-                               x-model="newTag"
-                        >
-                    </div>
-                </div>
-            </div>
             <div class="modal-footer">
                 <button type="button" wire:click.prevent="cancel()" class="btn btn-secondary" data-dismiss="modal">
                     Close
@@ -141,60 +122,90 @@
     @push('ex_scripts')
         <script>
             $(document).ready(function () {
-                let s2_countries = $('#country_ids');
-                let s2_tags = $('#tags');
+                const tag_input = document.getElementById('tags');
+                const country_input = document.getElementById('country_ids');
 
-                s2_countries.select2({width: 'resolve'});
-                s2_tags.select2({
-                    width: 'resolve',
-                    tags: true,
-                    multiple: true,
-                    minimumInputLength: 1,
-                    placeholder: "Select a tags",
-                    ajax: {
+                const tagify_tag = new Tagify(tag_input, {
+                    enforceWhitelist: false,
+                    whitelist: tag_input.value.trim().split(/\s*,\s*/)
+                })
+                const tagify_country = new Tagify(country_input, {
+                    delimiters: null,
+                    enforceWhitelist: true,
+                    whitelist: country_input.value.trim().split(/\s*,\s*/)
+                });
+
+                tagify_country.on('remove', function (e) {
+                    @this.call('remove_city_id', e.detail.data.id);
+                    @this.call('remove_city_name', e.detail.data.value);
+                });
+
+                tagify_country.on('add', function (e) {
+                    @this.call('add_city_id', e.detail.data.id);
+                    @this.call('add_city_name', e.detail.data.value);
+                });
+
+                tagify_country.on('input', function (e) {
+                    tagify_country.settings.whitelist.length = 0;
+                    tagify_country.loading(true)
+
+                    $.ajax({
+                        url: "{{ route('country.search') }}",
+                        data: {
+                            'term': e.detail.value
+                        }
+                    }).then(function (result) {
+                        tagify_country.settings.whitelist.push(...result, ...tagify_tag.value)
+                        tagify_country
+                            .loading(false)
+                            .dropdown.show.call(tagify_country, e.detail.value);
+                        // tagify_country.settings.whitelist.push(...result, ...tagify_country.value)
+
+                    }).catch(err => tagify_country.dropdown.hide.call(tagify_country))
+                });
+
+                tagify_tag.on('add', onAddTag)
+                    .on('remove', onRemoveTag)
+                    .on('input', onInput);
+
+                function onAddTag(e) {
+                @this.call('add_tag', e.detail.data.value);
+                }
+
+                function onRemoveTag(e) {
+                @this.call('remove_tag', e.detail.data.value);
+                }
+
+                function onInput(e) {
+                    tagify_tag.settings.whitelist.length = 0;
+                    tagify_tag.loading(true)
+
+                    $.ajax({
                         url: "{{ route('tags.search') }}",
-                        dataType: 'json',
-                        delay: 250,
-                        type: "GET",
-                    }
-                });
+                        data: {
+                            'term': e.detail.value
+                        }
+                    }).then(function (result) {
+                        tagify_tag.settings.whitelist.push(...result, ...tagify_tag.value)
+                        tagify_tag
+                            .loading(false)
+                            .dropdown.show.call(tagify_tag, e.detail.value);
+                    }).catch(err => tagify_tag.dropdown.hide.call(tagify_tag))
+                }
 
-                s2_tags.on('change', function () {
-                    let tags = [];
-                    const items = s2_tags.select2("data");
-                    items.forEach(function (item) {
-                        tags.push(item.text);
-                    });
-                    //@this.set('tags', tags);
-                });
-                s2_countries.on('change', function () {
-                    let country_ids = [];
-                    let country_names = [];
-                    const items = s2_countries.select2("data");
-                    items.forEach(function (item) {
-                        country_ids.push(item.id);
-                        country_names.push(item.text);
-                    });
-                @this.set('country_ids', country_ids);
-                @this.set('country_names', country_names);
-                });
                 window.livewire.on('closeModal', () => {
                     $('#crudModal_post').modal('hide');
+                    tagify_tag.removeAllTags()
+                    tagify_country.removeAllTags()
                 });
                 window.livewire.on('reset', () => {
-                    s2_countries.val(null).trigger('change');
-                    s2_tags.val(null).trigger('change');
+                    tagify_tag.removeAllTags()
+                    tagify_country.removeAllTags()
                 });
                 window.livewire.on('postEdit', items => {
-                    // console.log(items)
-                    items['tags'].forEach(function (item) {
-                        const option = new Option(item['text'], item['id'], true, true);
-                        // console.log(option)
-                        // s2_tags.append(option).trigger('change');
-                        // s2_tags.select2({data: items['tags']});
-                    });
-                    // s2_tags.val(items['tag_ids']).trigger('change');
-                    s2_countries.val(items['countries']).trigger('change');
+                    tagify_country.settings.whitelist.push(...items['countries'], ...tagify_country.value)
+                    tagify_tag.addTags(items['tags'])
+                    tagify_country.addTags(items['countries'])
                 })
             });
         </script>
