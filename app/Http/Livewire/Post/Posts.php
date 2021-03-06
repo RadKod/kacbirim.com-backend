@@ -89,7 +89,7 @@ class Posts extends Component
 
     public function create_or_update()
     {
-        dd($this->tags);
+         dd($this->tags);
         if ($this->post_id) {
             $this->update();
         } else {
@@ -103,32 +103,38 @@ class Posts extends Component
         $this->updateMode = true;
         $post = PostModel::query()->with(['countries', 'countries.country', 'tags', 'tags.tag'])
             ->where('id', $id)->first();
-        $this->post_id = $id;
-        $this->title = $post->title;
-        $this->description = $post->description;
-        $this->unit = $post->unit;
-        $this->post_image = $post->image;
-        $this->comparison_date = $post->comparison_date;
-        $tags = [];
-        $tag_ids = [];
-        $countries = [];
-        foreach ($post->countries as $country) {
-            $this->country_wage[$country->country->id] = $country->minimum_wage;
-            array_push($countries, $country->country->id);
-        }
-        foreach ($post->tags as $tag) {
-            array_push($tag_ids, $tag->tag->id);
-            array_push($tags, [
-                'id' => $tag->tag->id,
-                'text' => $tag->tag->name
+
+        if (isset($post)) {
+            $this->post_id = $id;
+            $this->title = $post->title;
+            $this->description = $post->description;
+            $this->unit = $post->unit;
+            $this->post_image = $post->image;
+            $this->comparison_date = $post->comparison_date;
+
+            $tags = [];
+            $tag_ids = [];
+            $countries = [];
+            foreach ($post->countries as $country) {
+                $this->country_wage[$country->country->id] = $country->minimum_wage;
+                $countries[] = $country->country->id;
+            }
+            foreach ($post->tags as $tag) {
+                $this->tags[] = $tag->tag->name;
+                $tag_ids[] = $tag->tag->id;
+                $tags[] = [
+                    'id' => $tag->tag->id,
+                    'text' => $tag->tag->name
+                ];
+            }
+
+            $this->emit('postEdit', [
+                'tags' => $tags,
+                'tag_ids' => $tag_ids,
+                'countries' => $countries
             ]);
         }
 
-        $this->emit('postEdit', [
-            'tags' => $tags,
-            'tag_ids' => $tag_ids,
-            'countries' => $countries
-        ]);
     }
 
     public function store()
@@ -161,7 +167,7 @@ class Posts extends Component
             ]);
         }
         foreach ($this->country_ids as $country_id) {
-            $m_wage = array_key_exists($country_id, $this->country_wage) ? $this->country_wage[$country_id] : null;
+            $m_wage = $this->country_wage[$country_id] ?? null;
             PostCountry::query()->create([
                 'post_id' => $post->id,
                 'country_id' => $country_id,
@@ -207,17 +213,17 @@ class Posts extends Component
                 'post_id' => $post->id,
                 'tag_id' => $tag->id,
             ]);
-            array_push($current_p_tag_ids, $post_tag->id);
+            $current_p_tag_ids[] = $post_tag->id;
         }
         foreach ($this->country_ids as $country_id) {
-            $m_wage = array_key_exists($country_id, $this->country_wage) ? $this->country_wage[$country_id] : null;
+            $m_wage = $this->country_wage[$country_id] ?? null;
             $post_country = PostCountry::query()->updateOrCreate([
                 'post_id' => $post->id,
                 'country_id' => $country_id
             ], [
                 'minimum_wage' => $m_wage
             ]);
-            array_push($current_p_country_ids, $post_country->id);
+            $current_p_country_ids[] = $post_country->id;
         }
         PostTag::query()->where('post_id', $post->id)
             ->whereNotIn('id', $current_p_tag_ids)->delete();
@@ -226,5 +232,13 @@ class Posts extends Component
         $this->closeModal();
         session()->flash('message', 'Post Updated Successfully.');
         $this->resetInputFields();
+    }
+
+    public function delete($id)
+    {
+        if ($id) {
+            PostModel::query()->where('id', $id)->delete();
+            session()->flash('message', 'Post Deleted Successfully.');
+        }
     }
 }

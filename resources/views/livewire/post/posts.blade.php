@@ -16,6 +16,7 @@
             <th style="width: 100px">Image</th>
             <th>Title</th>
             <th>Unit</th>
+            <th>Tags</th>
             <th>Action</th>
         </tr>
         </thead>
@@ -29,6 +30,13 @@
                 </td>
                 <td>{{ $post->title }}</td>
                 <td>{{ $post->unit }}</td>
+                <td>
+                    @foreach($post->tags as $tag)
+                        <span class="badge badge-success">
+                            {{ $tag->tag->name }}
+                        </span>
+                    @endforeach
+                </td>
                 <td>
                     <button data-toggle="modal" data-target="#crudModal_post" wire:click="edit({{ $post->id }})"
                             class="btn btn-primary btn-sm">Edit

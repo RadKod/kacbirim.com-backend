@@ -71,13 +71,23 @@
     <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="myValues">
         <value>
-          <list size="6">
+          <list size="16">
             <item index="0" class="java.lang.String" itemvalue="wire:model" />
             <item index="1" class="java.lang.String" itemvalue="wire:submit.prevent" />
             <item index="2" class="java.lang.String" itemvalue="wire:ignore" />
             <item index="3" class="java.lang.String" itemvalue="wire:click.prevent" />
             <item index="4" class="java.lang.String" itemvalue="wire:ignore.self" />
             <item index="5" class="java.lang.String" itemvalue="wire:click" />
+            <item index="6" class="java.lang.String" itemvalue="wire:model.debounce.365ms" />
+            <item index="7" class="java.lang.String" itemvalue=":value" />
+            <item index="8" class="java.lang.String" itemvalue="x-data" />
+            <item index="9" class="java.lang.String" itemvalue="x-for" />
+            <item index="10" class="java.lang.String" itemvalue=":key" />
+            <item index="11" class="java.lang.String" itemvalue="x-text" />
+            <item index="12" class="java.lang.String" itemvalue="@click" />
+            <item index="13" class="java.lang.String" itemvalue="@keydown.enter.prevent" />
+            <item index="14" class="java.lang.String" itemvalue="@keydown.backspace" />
+            <item index="15" class="java.lang.String" itemvalue="x-model" />
           </list>
         </value>
       </option>
