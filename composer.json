@@ -19,7 +19,8 @@
         "laravel/sanctum": "^2.6",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.2",
-        "livewire/livewire": "^2.0"
+        "livewire/livewire": "^2.0",
+        "mehradsadeghi/laravel-filter-querystring": "^1.1"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
