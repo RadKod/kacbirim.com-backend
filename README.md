@@ -24,6 +24,7 @@ method | endpoint | detail
 `get` | `api/v1/posts` | Retrieve all posts.
 `get` | `api/v1/posts/{id_or_slug}` | Retrieve post detail.
 `get` | `api/v1/countries` | Retrieve all countries.
+`get` | `api/v1/tags` | Retrieve all tags.
 
 `api/v1/posts` parameters:
 
@@ -45,7 +46,18 @@ method | endpoint | detail
 ?countries_like=field,value1
 ?field=value
 ```
+
 `api/v1/countries` parameters:
+
+```
+?sort=field
+?sort=field,sort_type
+?sort[0]=field1&sort[1]=field2
+?like=field,value1
+?field=value
+```
+
+`api/v1/tags` parameters:
 
 ```
 ?sort=field

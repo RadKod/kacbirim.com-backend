@@ -32,14 +32,14 @@ class PostController extends Controller
         ])->where('id', $id_or_slug)->orWhere('slug', $id_or_slug)->first();
         if ($post) {
             return response()->json([
-                'status' => 'success',
+                'success' => true,
                 'message' => 'post found',
                 'data' => new PostResource($post)
             ]);
         }
 
         return response()->json([
-            'status' => 'error',
+            'success' => false,
             'message' => 'post not found',
             'data' => null,
         ]);
