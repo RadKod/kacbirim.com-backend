@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\V1\PostController;
+use App\Http\Controllers\Api\V1\CountryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +16,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::prefix('v1')->group(function () {
+    Route::get('/posts', [PostController::class, 'index'])->name('api.posts');
+    Route::get('/posts/{id_or_slug}', [PostController::class, 'show'])->name('api.posts.detail');
+    Route::get('/countries', [CountryController::class, 'index'])->name('api.countries');
 });
