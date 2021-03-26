@@ -21,11 +21,15 @@ class Posts extends Component
 
     public $post_image = null;
     public $tags = [];
-    public $country_wage = [];
+    public $product_unit = [];
     public $country_ids = [];
     public $country_names = [];
-    public $title, $description, $image, $post_id, $confirming, $comparison_date, $unit;
+    public $title, $description, $image, $post_id, $confirming, $comparison_date;
     public $updateMode = false;
+
+    public function mount()
+    {
+    }
 
     public function render()
     {
@@ -38,11 +42,6 @@ class Posts extends Component
         ]);
     }
 
-    public function mount()
-    {
-
-    }
-
     private function resetInputFields()
     {
         $this->title = null;
@@ -51,9 +50,8 @@ class Posts extends Component
         $this->image = null;
         $this->post_id = null;
         $this->comparison_date = null;
-        $this->unit = null;
         $this->confirming = null;
-        $this->country_wage = [];
+        $this->product_unit = [];
         $this->country_ids = [];
         $this->country_names = [];
         $this->tags = [];
@@ -137,19 +135,18 @@ class Posts extends Component
             $this->post_id = $id;
             $this->title = $post->title;
             $this->description = $post->description;
-            $this->unit = $post->unit;
             $this->post_image = $post->image;
             $this->comparison_date = $post->comparison_date;
 
             $tags = [];
             $countries = [];
             foreach ($post->countries as $country) {
-                $this->country_wage[$country->country->id] = $country->minimum_wage;
+                $this->product_unit[$country->country->id] = $country->product_unit;
                 $countries[] = [
-                    'id'=>$country->country->id,
-                    'value'=>$country->country->name,
-                    'code'=>$country->country->code,
-                    'currency'=>$country->country->currency,
+                    'id' => $country->country->id,
+                    'value' => $country->country->name,
+                    'code' => $country->country->code,
+                    'currency' => $country->country->currency,
                 ];
             }
             foreach ($post->tags as $tag) {
@@ -169,7 +166,6 @@ class Posts extends Component
     {
         $this->validate([
             'title' => 'required|min:6|unique:posts,title',
-            'unit' => 'required|int',
             'comparison_date' => 'required|date',
             'image' => 'required|dimensions:min_width=100,min_height=200|mimes:jpeg,png,jpg,gif,svg',
             'country_ids' => 'required|array|min:2',
@@ -182,8 +178,7 @@ class Posts extends Component
             'slug' => Str::slug($this->title),
             'description' => $this->description,
             'image' => $image_path,
-            'comparison_date' => $this->comparison_date,
-            'unit' => $this->unit
+            'comparison_date' => $this->comparison_date
         ]);
         foreach ($this->tags as $tag) {
             $tag = Tags::query()->firstOrCreate(
@@ -195,11 +190,11 @@ class Posts extends Component
             ]);
         }
         foreach ($this->country_ids as $country_id) {
-            $m_wage = $this->country_wage[$country_id] ?? null;
+            $m_unit = $this->product_unit[$country_id] ?? null;
             PostCountry::query()->create([
                 'post_id' => $post->id,
                 'country_id' => $country_id,
-                'minimum_wage' => $m_wage,
+                'product_unit' => $m_unit,
             ]);
         }
         session()->flash('message', 'Post Created Successfully.');
@@ -211,7 +206,6 @@ class Posts extends Component
     {
         $this->validate([
             'title' => 'required|min:6|unique:posts,title,' . $this->post_id,
-            'unit' => 'required|int',
             'comparison_date' => 'required|date',
             'image' => 'nullable|dimensions:min_width=100,min_height=200|mimes:jpeg,png,jpg,gif,svg',
             'country_ids' => 'required|array|min:2',
@@ -228,8 +222,7 @@ class Posts extends Component
             'title' => $this->title,
             'description' => $this->description,
             'image' => $image_path,
-            'comparison_date' => $this->comparison_date,
-            'unit' => $this->unit,
+            'comparison_date' => $this->comparison_date
         ]);
         $current_p_tag_ids = [];
         $current_p_country_ids = [];
@@ -245,12 +238,12 @@ class Posts extends Component
             $current_p_tag_ids[] = $post_tag->tag_id;
         }
         foreach ($this->country_ids as $country_id) {
-            $m_wage = $this->country_wage[$country_id] ?? null;
+            $m_unit = $this->product_unit[$country_id] ?? null;
             $post_country = PostCountry::query()->updateOrCreate([
                 'post_id' => $post->id,
                 'country_id' => $country_id
             ], [
-                'minimum_wage' => $m_wage
+                'product_unit' => $m_unit
             ]);
             $current_p_country_ids[] = $post_country->country_id;
         }

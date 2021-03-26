@@ -22,11 +22,11 @@ class Post extends Model
         'not_between',
         'in',
         'like',
-        'tags_in', 'countries_in', 'tags_like', 'countries_like',
-        'id', 'title', 'slug', 'description', 'image', 'comparison_date', 'unit'
+        'tags_in', 'products_countries_in', 'tags_like', 'products_countries_like',
+        'id', 'title', 'slug', 'description', 'image', 'comparison_date'
     ];
     protected $fillable = [
-        'title', 'slug', 'description', 'image', 'comparison_date', 'unit'
+        'title', 'slug', 'description', 'image', 'comparison_date'
     ];
 
     public function tags_like($query, $value)
@@ -42,18 +42,24 @@ class Post extends Model
         });
     }
 
-    public function countries_like($query, $value)
+    public function products_countries_like($query, $value)
     {
 
         $exploded = explode(',', $value);
         $field = array_shift($exploded);
 
         return $query->whereHas('countries', function ($q) use ($field, $exploded) {
-            if ($field === 'wage') {
-                $q->where('minimum_wage', 'LIKE', '%' . $exploded[0] . '%');
+            if ($field === 'product_unit') {
+                $q->where('product_unit', 'LIKE', '%' . $exploded[0] . '%');
             } else {
                 $q->whereHas('country', function ($q) use ($field, $exploded) {
-                    $q->where($field, 'LIKE', '%' . $exploded[0] . '%');
+                    if ($field === 'wage') {
+                        $q->whereHas('country_wages', function ($q) use ($field, $exploded) {
+                            $q->where($field, 'LIKE', '%' . $exploded[0] . '%');
+                        });
+                    } else {
+                        $q->where($field, 'LIKE', '%' . $exploded[0] . '%');
+                    }
                 });
             }
         });
@@ -72,18 +78,24 @@ class Post extends Model
         });
     }
 
-    public function countries_in($query, $value)
+    public function products_countries_in($query, $value)
     {
 
         $exploded = explode(',', $value);
         $field = array_shift($exploded);
 
         return $query->whereHas('countries', function ($q) use ($field, $exploded) {
-            if ($field === 'wage') {
-                $q->whereIn('minimum_wage', $exploded);
+            if ($field === 'product_unit') {
+                $q->whereIn('product_unit', $exploded);
             } else {
                 $q->whereHas('country', function ($q) use ($field, $exploded) {
-                    $q->whereIn($field, $exploded);
+                    if ($field === 'wage') {
+                        $q->whereHas('country_wages', function ($q) use ($field, $exploded) {
+                            $q->whereIn($field, $exploded);
+                        });
+                    } else {
+                        $q->whereIn($field, $exploded);
+                    }
                 });
             }
         });

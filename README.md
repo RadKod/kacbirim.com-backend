@@ -40,10 +40,10 @@ method | endpoint | detail
 ?sort[0]=field1&sort[1]=field2
 ?in=field,value1,value2
 ?tags_in=field,value1,value2
-?countries_in=field,value1,value2
+?products_countries_in=field,value1,value2
 ?like=field,value1
 ?tags_like=field,value1
-?countries_like=field,value1
+?products_countries_like=field,value1
 ?field=value
 ```
 
