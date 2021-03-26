@@ -22,9 +22,8 @@ class PostResource extends JsonResource
             'description' => $this->description,
             'image' => asset('storage/' . $this->image),
             'comparison_date' => $this->comparison_date,
-            'unit' => $this->unit,
             'tags' => TagResource::collection($this->tags),
-            'countries' => CountryResource::collection($this->countries)
+            'products_countries' => CountryResource::collection($this->countries)
         ];
     }
 }

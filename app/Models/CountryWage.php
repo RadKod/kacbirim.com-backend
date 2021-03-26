@@ -2,27 +2,21 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class PostCountry extends Model
+class CountryWage extends Model
 {
     use HasFactory;
 
-    protected $table = 'post_country';
+    protected $table = 'country_wage';
     protected $fillable = [
-        'post_id', 'country_id', 'product_unit'
+        'country_id', 'year', 'wage'
     ];
 
     public function country(): BelongsTo
     {
         return $this->belongsTo(Countries::class, 'country_id', 'id');
-    }
-
-    public function post(): BelongsTo
-    {
-        return $this->belongsTo(Post::class, 'post_id', 'id');
     }
 }

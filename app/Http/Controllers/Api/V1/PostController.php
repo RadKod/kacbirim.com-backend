@@ -16,7 +16,7 @@ class PostController extends Controller
     public function index(): PostCollection
     {
         $posts = Post::with([
-            'tags', 'countries', 'tags.tag', 'countries.country'
+            'tags', 'countries', 'tags.tag', 'countries.country', 'countries.country.country_wages'
         ])->filter()->paginate()->appends(request()->except('page'));
         return new PostCollection($posts);
     }

@@ -15,7 +15,6 @@
             <th style="width: 20px">ID</th>
             <th style="width: 100px">Image</th>
             <th>Title</th>
-            <th>Unit</th>
             <th>Tags</th>
             <th>Countries</th>
             <th>Action</th>
@@ -30,11 +29,10 @@
                          alt="" style="width: 100px;height:50px;object-fit: contain;">
                 </td>
                 <td>{{ $post->title }}</td>
-                <td>{{ $post->unit }}</td>
                 <td>
                     @foreach($post->tags as $tag)
                         <span class="badge badge-success">
-                            {{ $tag->tag->name }}  {{ $tag->tag->id }}
+                            {{ $tag->tag->name }}
                         </span>
                     @endforeach
                 </td>

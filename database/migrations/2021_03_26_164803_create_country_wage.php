@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePostCountryTable extends Migration
+class CreateCountryWage extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,17 @@ class CreatePostCountryTable extends Migration
      */
     public function up()
     {
-        Schema::create('post_country', function (Blueprint $table) {
+        Schema::create('country_wage', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('post_id');
             $table->unsignedBigInteger('country_id');
-            $table->integer('product_unit');
+            $table->date('year');
+            $table->integer('wage');
             $table->timestamps();
             // foreign keys
-            $table->foreign('post_id')->references('id')
-                ->on('posts')->onDelete('cascade');
             $table->foreign('country_id')->references('id')
                 ->on('countries')->onDelete('cascade');
 
-            $table->unique(['post_id', 'country_id']);
+            $table->unique(['country_id', 'year', 'wage']);
         });
     }
 
@@ -36,6 +34,6 @@ class CreatePostCountryTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('post_country');
+        Schema::dropIfExists('country_wage');
     }
 }

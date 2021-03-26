@@ -20,7 +20,6 @@ class CreatePostsTable extends Migration
             $table->text('description');
             $table->text('image');
             $table->date('comparison_date');
-            $table->integer('unit');
             $table->timestamps();
         });
     }

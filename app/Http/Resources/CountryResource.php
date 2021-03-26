@@ -16,11 +16,13 @@ class CountryResource extends JsonResource
     public function toArray($request)
     {
         if ($this->country) {
+            $post_year = substr($this->post->comparison_date,0,4);
             return [
                 'name' => $this->country->name,
                 'code' => $this->country->code,
                 'currency' => $this->country->currency,
-                'wage' => $this->minimum_wage,
+                'product_unit' => $this->product_unit,
+                'wage' => new CountryWageResource($this->country->country_wages->where('year', $post_year)->first())
             ];
         }
 

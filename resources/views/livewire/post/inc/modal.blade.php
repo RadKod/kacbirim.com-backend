@@ -40,17 +40,12 @@
                     </div>
 
                     <div class="form-row">
-                        <div class="col-4">
+                        <div class="col-6">
                             <label for="title">Name</label>
                             <input type="text" class="form-control" id="title" wire:model="title" placeholder="Title">
                             @error('title') <span class="text-danger">{{ $message }}</span>@enderror
                         </div>
-                        <div class="col-4">
-                            <label for="unit">Unit</label>
-                            <input type="number" class="form-control" id="unit" wire:model="unit" placeholder="Unit">
-                            @error('unit') <span class="text-danger">{{ $message }}</span>@enderror
-                        </div>
-                        <div class="col-4">
+                        <div class="col-6">
                             <label for="comparison_date">Comparison Date</label>
                             <input type="date" class="form-control" id="comparison_date" wire:model="comparison_date"
                                    placeholder="Comparison Date">
@@ -95,13 +90,13 @@
 
                     @if($country_ids)
                         <fieldset class="post_salary">
-                            <legend class="post_salary">monthly salary</legend>
+                            <legend class="post_salary">product unit</legend>
                             @foreach($country_ids as $key=>$country_id)
                                 <div class="form-group">
                                     <label for="monthly_salary_{{$key}}">{{ $country_names[$key] }}</label>
                                     <input type="number" class="form-control" id="monthly_salary_{{$key}}"
-                                           wire:model="country_wage.{{$country_id}}" name="country_wage[]"
-                                           placeholder="monthly salary">
+                                           wire:model="product_unit.{{$country_id}}" name="country_wage[]"
+                                           placeholder="unit price">
                                 </div>
                             @endforeach
                         </fieldset>
@@ -229,69 +224,6 @@
                 width: auto;
                 padding: 0 10px;
                 border-bottom: none;
-            }
-
-            .tags-input {
-                display: flex;
-                flex-wrap: wrap;
-                background-color: #fff;
-                border-width: 1px;
-                border-radius: .25rem;
-                padding-left: .5rem;
-                padding-right: 1rem;
-                padding-top: .5rem;
-                padding-bottom: .25rem;
-            }
-
-            .tags-input-tag {
-                display: inline-flex;
-                line-height: 1;
-                align-items: center;
-                font-size: .875rem;
-                background-color: #bcdefa;
-                color: #1c3d5a;
-                border-radius: .25rem;
-                user-select: none;
-                padding: .25rem;
-                margin-right: .5rem;
-                margin-bottom: .25rem;
-            }
-
-            .tags-input-tag:last-of-type {
-                margin-right: 0;
-            }
-
-            .tags-input-remove {
-                color: #2779bd;
-                font-size: 1.125rem;
-                line-height: 1;
-            }
-
-            .tags-input-remove:first-child {
-                margin-right: .25rem;
-            }
-
-            .tags-input-remove:last-child {
-                margin-left: .25rem;
-            }
-
-            .tags-input-remove:focus {
-                outline: 0;
-            }
-
-            .tags-input-text {
-                flex: 1;
-                outline: 0;
-                padding-top: .25rem;
-                padding-bottom: .25rem;
-                margin-left: .5rem;
-                margin-bottom: .25rem;
-                min-width: 10rem;
-            }
-
-            .py-16 {
-                padding-top: 4rem;
-                padding-bottom: 4rem;
             }
         </style>
     @endpush
