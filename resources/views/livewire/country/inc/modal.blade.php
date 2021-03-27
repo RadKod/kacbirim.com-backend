@@ -78,7 +78,7 @@
                                 @foreach($wage_list as $wage_key=>$wage_item)
                                     <tr>
                                         <td>{{ $wage_item['year'] }}</td>
-                                        <td>{{ $wage_item['wage'] }}</td>
+                                        <td>{{ $wage_item['wage'] }} {{$currency}}</td>
                                         <td>
                                             <span wire:click="delete_wage({{ $wage_key }})"
                                                   class="btn btn-sm btn-danger">
@@ -104,7 +104,7 @@
                                     @foreach($wage_delete_list as $wage_key=>$wage_item)
                                         <tr>
                                             <td>{{ $wage_item['year'] }}</td>
-                                            <td>{{ $wage_item['wage'] }}</td>
+                                            <td>{{ $wage_item['wage'] }} {{$currency}}</td>
                                             <td>
                                             <span wire:click="undo_wage({{ $wage_key }})"
                                                   class="btn btn-sm btn-primary">

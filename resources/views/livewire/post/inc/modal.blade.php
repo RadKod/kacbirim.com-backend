@@ -9,7 +9,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form>
+                <ul>
                     <input type="hidden" wire:model="post_id">
 
                     <div class="form-row">
@@ -69,39 +69,39 @@
 
                     <div class="form-group">
                         <div wire:ignore>
-                            <label for="country_ids">Countries</label>
-                            <input type="text" id="country_ids" class="countries" placeholder="countries">
+                            <label for="countries">Countries</label>
+                            <input type="text" id="countries" class="countries" placeholder="countries">
                         </div>
-                        @error('country_ids') <span class="text-danger">{{ $message }}</span>@enderror
+                        @error('countries') <span class="text-danger">{{ $message }}</span>@enderror
                     </div>
 
-                    {{--<div class="form-group">
-                        <div wire:ignore>
-                            <label for="country_ids">Countries</label>
-                            <select wire:model="country_ids" name="country_ids[]" id="country_ids" class="form-control"
-                                    multiple style="width: 100%">
-                                @foreach($countries_data as $country)
-                                    <option value="{{$country->id}}">{{$country->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        @error('country_ids') <span class="text-danger">{{ $message }}</span>@enderror
-                    </div>--}}
-
-                    @if($country_ids)
+                    @if($countries)
                         <fieldset class="post_salary">
                             <legend class="post_salary">product unit</legend>
-                            @foreach($country_ids as $key=>$country_id)
+                            @foreach($countries as $key=>$country)
                                 <div class="form-group">
-                                    <label for="monthly_salary_{{$key}}">{{ $country_names[$key] }}</label>
+                                    <label for="monthly_salary_{{$key}}">
+                                        {{ $country['value'] }}
+                                        (wage: {{ $country['current_wage'] }}{{ $country['currency'] }})
+                                    </label>
                                     <input type="number" class="form-control" id="monthly_salary_{{$key}}"
-                                           wire:model="product_unit.{{$country_id}}" name="country_wage[]"
+                                           wire:model="product_unit.{{$country['id']}}" name="product_unit[]"
                                            placeholder="unit price">
                                 </div>
                             @endforeach
                         </fieldset>
-                    @endif
-                </form>
+
+                        <ul>
+                            @foreach ($countries as $country)
+                                <li>
+                                    {{ $country['value'] }} : {{ \App\Helpers\calculate_purchasing_power(
+                                                                $product_unit[$country['id']], $country['current_wage']
+                                                                ) }}
+                                </li>
+                            @endforeach
+                        </ul>
+                        @endif
+                        </form>
             </div>
 
             <div class="modal-footer">
@@ -118,7 +118,7 @@
         <script>
             $(document).ready(function () {
                 const tag_input = document.getElementById('tags');
-                const country_input = document.getElementById('country_ids');
+                const country_input = document.getElementById('countries');
 
                 const tagify_tag = new Tagify(tag_input, {
                     enforceWhitelist: false,
@@ -131,14 +131,11 @@
                 });
 
                 tagify_country.on('remove', function (e) {
-                    console.log(e.detail.data)
-                    @this.call('remove_city_id', e.detail.data.id);
-                    @this.call('remove_city_name', e.detail.data.value);
+                @this.call('remove_countries', e.detail.data);
                 });
 
                 tagify_country.on('add', function (e) {
-                    @this.call('add_city_id', e.detail.data.id);
-                    @this.call('add_city_name', e.detail.data.value);
+                @this.call('add_countries', e.detail.data);
                 });
 
                 tagify_country.on('input', function (e) {
@@ -151,11 +148,10 @@
                             'term': e.detail.value
                         }
                     }).then(function (result) {
-                        tagify_country.settings.whitelist.push(...result, ...tagify_tag.value)
+                        tagify_country.settings.whitelist.push(...result, ...tagify_country.value)
                         tagify_country
                             .loading(false)
                             .dropdown.show.call(tagify_country, e.detail.value);
-                        // tagify_country.settings.whitelist.push(...result, ...tagify_country.value)
 
                     }).catch(err => tagify_country.dropdown.hide.call(tagify_country))
                 });

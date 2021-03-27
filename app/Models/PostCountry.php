@@ -25,4 +25,15 @@ class PostCountry extends Model
     {
         return $this->belongsTo(Post::class, 'post_id', 'id');
     }
+
+    public function getCurrentWageAttribute(): ?int
+    {
+        $return_wage = null;
+        $post_year = substr($this->post->comparison_date, 0, 4);
+        $wage = $this->country->country_wages->firstWhere('year', $post_year);
+        if ($wage) {
+            $return_wage = $wage->wage;
+        }
+        return $return_wage;
+    }
 }
