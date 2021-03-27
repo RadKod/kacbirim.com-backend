@@ -17,6 +17,7 @@ class CreatePostCountryTable extends Migration
             $table->id();
             $table->unsignedBigInteger('post_id');
             $table->unsignedBigInteger('country_id');
+            $table->text('product_name');
             $table->integer('product_unit');
             $table->timestamps();
             // foreign keys

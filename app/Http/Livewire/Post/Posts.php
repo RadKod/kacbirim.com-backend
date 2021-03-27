@@ -11,6 +11,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use App\Models\Post as PostModel;
+use function App\Helpers\calculate_purchasing_power;
 
 class Posts extends Component
 {
@@ -21,7 +22,7 @@ class Posts extends Component
 
     public $post_image = null;
     public $tags = [];
-    public $product_unit = [];
+    public $product = [];
     public $countries = [];
     public $title, $description, $image, $post_id, $confirming, $comparison_date;
     public $updateMode = false;
@@ -50,10 +51,31 @@ class Posts extends Component
         $this->post_id = null;
         $this->comparison_date = null;
         $this->confirming = null;
-        $this->product_unit = [];
+        $this->product = [];
         $this->countries = [];
         $this->tags = [];
         $this->emit('reset');
+    }
+
+    public function calculate_purchasing_power($product_name, $unit, $wage)
+    {
+        $purchasing_power = calculate_purchasing_power($unit, $wage);
+        $text = "";
+        $year = $purchasing_power['year'];
+        $month = $purchasing_power['month'];
+        $month_in = $purchasing_power['month_in'];
+
+        if ($month_in) {
+            $text = "1 ay içinde " . $month_in . " adet " . $product_name . " alınabilir.";
+        } else {
+            if ($year) {
+                $text = $year . " " . ($month ? 'yıl&nbsp;' : 'yıl\'da ' . $product_name . ' alınabilir.');
+            }
+            if ($month) {
+                $text .= $month . " ay'da " . $product_name . " alınabilir.";
+            }
+        }
+        return $text;
     }
 
     public function cancel()
@@ -134,7 +156,10 @@ class Posts extends Component
             $new_tags = [];
             $new_countries = [];
             foreach ($post->countries as $country) {
-                $this->product_unit[$country->country->id] = $country->product_unit;
+                $this->product[$country->country->id] = [
+                    'name' => $country->product_name,
+                    'unit' => $country->product_unit,
+                ];
                 $new_countries[] = [
                     'id' => $country->country->id,
                     'value' => $country->country->name,
@@ -183,11 +208,12 @@ class Posts extends Component
             ]);
         }
         foreach ($this->countries as $country) {
-            $m_unit = $this->product_unit[$country['id']] ?? null;
+            $m_unit = $this->product[$country['id']] ?? null;
             PostCountry::query()->create([
                 'post_id' => $post->id,
                 'country_id' => $country['id'],
-                'product_unit' => $m_unit,
+                'product_name' => $m_unit['name'],
+                'product_unit' => $m_unit['unit'],
             ]);
         }
         session()->flash('message', 'Post Created Successfully.');
@@ -231,12 +257,13 @@ class Posts extends Component
             $current_p_tag_ids[] = $post_tag->tag_id;
         }
         foreach ($this->countries as $country) {
-            $m_unit = $this->product_unit[$country['id']] ?? null;
+            $m_unit = $this->product[$country['id']] ?? null;
             $post_country = PostCountry::query()->updateOrCreate([
                 'post_id' => $post->id,
                 'country_id' => $country['id']
             ], [
-                'product_unit' => $m_unit
+                'product_name' => $m_unit['name'],
+                'product_unit' => $m_unit['unit'],
             ]);
             $current_p_country_ids[] = $post_country->country_id;
         }

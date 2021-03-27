@@ -6,36 +6,37 @@ if (!function_exists('calculate_purchasing_power')) {
     /**
      * @param mixed $unit
      * @param mixed $wage
-     * @return string
+     * @return null[]
      */
-    function calculate_purchasing_power($unit, $wage): string
+    function calculate_purchasing_power($unit, $wage): array
     {
+        $return_array = [
+            'year' => null,
+            'month' => null,
+            'month_in' => null,
+        ];
         if ($unit > $wage) {
             $new_wage = $wage;
-            $mount = 0;
-            $display = '1 Ay';
-            $years = '';
-            while ($new_wage <= $unit) {
-                $mount++;
+            $mount = 1;
+            $months = null;
+            $years = null;
+            while ($new_wage < $unit) {
                 $new_wage += $wage;
+                $mount++;
             }
             for ($i = 0; $i <= $mount; $i++) {
                 if (!is_float($i / 12)) {
-                    $years = floor($i / 12) . ' Yıl';
-                    $years = $years . ($years > 1 ? ' ' : '');
-                    if ($years == 0) {
-                        $years = '';
-                    }
+                    $years = floor($i / 12);
                 }
-                $months = ' ' . ($i % 12) . ' Ay';
-                $display = $years . '' . $months;
+                $months = ceil($i % 12);
             }
-            $return_msg = $display . ' içinde alabiliyor.';
+            $return_array['year'] = $years ? $years : null;
+            $return_array['month'] = $months;
         } else {
-            $return_msg = '1 Ayda ' . round($wage / $unit) . ' tane alabiliyor.';
+            $return_array['month_in'] = round($wage / $unit);
         }
 
-        return $return_msg;
+        return $return_array;
     }
 }
 
