@@ -22,7 +22,7 @@ if (!function_exists('calculate_purchasing_power')) {
             for ($i = 0; $i <= $mount; $i++) {
                 if (!is_float($i / 12)) {
                     $years = floor($i / 12) . ' Yıl';
-                    $years = $years . ($years > 1 ? ' ve' : '');
+                    $years = $years . ($years > 1 ? ' ' : '');
                     if ($years == 0) {
                         $years = '';
                     }
