@@ -85,19 +85,22 @@
                                         (wage: {{ $country['current_wage'] }}{{ $country['currency'] }})
                                     </label>
                                     <input type="number" class="form-control" id="monthly_salary_{{$key}}"
-                                           wire:model="product_unit.{{$country['id']}}" name="product_unit[]"
+                                           wire:model="product.{{$country['id']}}.unit" name="product[]"
                                            placeholder="unit price">
+                                    <input type="text" class="form-control" id="monthly_salary_{{$key}}"
+                                           wire:model="product.{{$country['id']}}.name" name="product[]"
+                                           placeholder="product name">
                                 </div>
                             @endforeach
                         </fieldset>
 
                         <ul>
                             @foreach ($countries as $country)
-                                @if (key_exists($country['id'], $product_unit))
+                                @if (key_exists($country['id'], $product))
                                     <li>
-                                        {{ $country['value'] }} : {{ \App\Helpers\calculate_purchasing_power(
-                                                                $product_unit[$country['id']], $country['current_wage']
-                                                                ) }}
+                                        {{ $country['value'] }} : {!! $this->calculate_purchasing_power(
+                                                                $product[$country['id']]['name'], $product[$country['id']]['unit'], $country['current_wage']
+                                                                ) !!}
                                     </li>
                                 @endif
                             @endforeach

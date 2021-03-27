@@ -49,8 +49,8 @@ class Post extends Model
         $field = array_shift($exploded);
 
         return $query->whereHas('countries', function ($q) use ($field, $exploded) {
-            if ($field === 'product_unit') {
-                $q->where('product_unit', 'LIKE', '%' . $exploded[0] . '%');
+            if ($field === 'product_unit' || $field === 'product_name') {
+                $q->where($field, 'LIKE', '%' . $exploded[0] . '%');
             } else {
                 $q->whereHas('country', function ($q) use ($field, $exploded) {
                     if ($field === 'wage') {
@@ -85,8 +85,8 @@ class Post extends Model
         $field = array_shift($exploded);
 
         return $query->whereHas('countries', function ($q) use ($field, $exploded) {
-            if ($field === 'product_unit') {
-                $q->whereIn('product_unit', $exploded);
+            if ($field === 'product_unit' || $field === 'product_name') {
+                $q->whereIn($field, $exploded);
             } else {
                 $q->whereHas('country', function ($q) use ($field, $exploded) {
                     if ($field === 'wage') {

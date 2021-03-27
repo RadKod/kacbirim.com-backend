@@ -21,6 +21,7 @@ class CountryResource extends JsonResource
                 'name' => $this->country->name,
                 'code' => $this->country->code,
                 'currency' => $this->country->currency,
+                'product_name' => $this->product_name,
                 'product_unit' => $this->product_unit,
                 'wage' => $this->current_wage,
                 'purchasing_power' => calculate_purchasing_power($this->product_unit, $this->current_wage),
