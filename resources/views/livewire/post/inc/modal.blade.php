@@ -97,11 +97,13 @@
                         <ul>
                             @foreach ($countries as $country)
                                 @if (key_exists($country['id'], $product))
-                                    <li>
-                                        {{ $country['value'] }} : {!! $this->calculate_purchasing_power(
+                                    @if(key_exists('name', $product[$country['id']]) and key_exists('unit', $product[$country['id']]))
+                                        <li>
+                                            {{ $country['value'] }} : {!! $this->calculate_purchasing_power(
                                                                 $product[$country['id']]['name'], $product[$country['id']]['unit'], $country['current_wage']
                                                                 ) !!}
-                                    </li>
+                                        </li>
+                                    @endif
                                 @endif
                             @endforeach
                         </ul>
