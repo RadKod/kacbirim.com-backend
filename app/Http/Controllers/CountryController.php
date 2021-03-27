@@ -28,10 +28,12 @@ class CountryController extends Controller
     {
         $term = $request->get('term');
         $countries = Countries::query()
-            ->select('id', 'name as value', 'code', 'currency')
+            ->select('*', 'name as value')
             ->where('name', 'LIKE', '%' . $term . '%')
             ->orderBy('name')
-            ->get();
+            ->get()->each(function ($i) {
+                $i->makeVisible('current_wage');
+            });
 
         return response()->json($countries);
     }

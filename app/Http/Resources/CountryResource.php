@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use function App\Helpers\calculate_purchasing_power;
 
 class CountryResource extends JsonResource
 {
@@ -16,20 +17,21 @@ class CountryResource extends JsonResource
     public function toArray($request)
     {
         if ($this->country) {
-            $post_year = substr($this->post->comparison_date,0,4);
             return [
                 'name' => $this->country->name,
                 'code' => $this->country->code,
                 'currency' => $this->country->currency,
                 'product_unit' => $this->product_unit,
-                'wage' => new CountryWageResource($this->country->country_wages->where('year', $post_year)->first())
+                'wage' => $this->current_wage,
+                'purchasing_power' => calculate_purchasing_power($this->product_unit, $this->current_wage),
             ];
         }
 
         return [
             'name' => $this->name,
             'code' => $this->code,
-            'currency' => $this->currency
+            'currency' => $this->currency,
+            'wages' => CountryWageResource::collection($this->country_wages)
         ];
     }
 }
