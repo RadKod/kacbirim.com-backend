@@ -32,7 +32,7 @@ if (!function_exists('calculate_purchasing_power')) {
             }
             $return_msg = $display . ' içinde alabiliyor.';
         } else {
-            $return_msg = '1 Ayda ' . round($wage / $unit) . ' tane alınabilir.';
+            $return_msg = '1 Ayda ' . round($wage / $unit) . ' tane alabiliyor.';
         }
 
         return $return_msg;
