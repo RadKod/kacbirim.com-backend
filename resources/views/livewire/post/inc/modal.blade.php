@@ -93,11 +93,13 @@
 
                         <ul>
                             @foreach ($countries as $country)
-                                <li>
-                                    {{ $country['value'] }} : {{ \App\Helpers\calculate_purchasing_power(
+                                @if (key_exists($country['id'], $product_unit))
+                                    <li>
+                                        {{ $country['value'] }} : {{ \App\Helpers\calculate_purchasing_power(
                                                                 $product_unit[$country['id']], $country['current_wage']
                                                                 ) }}
-                                </li>
+                                    </li>
+                                @endif
                             @endforeach
                         </ul>
                         @endif
