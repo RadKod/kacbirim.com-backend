@@ -54,10 +54,13 @@ class Posts extends Component
         $this->product = [];
         $this->countries = [];
         $this->tags = [];
+        // Clean errors if were visible before
+        $this->resetErrorBag();
+        $this->resetValidation();
         $this->emit('reset');
     }
 
-    public function calculate_purchasing_power($product_name, $unit, $wage)
+    public function calculate_purchasing_power($product_name, $unit, $product_type, $wage)
     {
         $purchasing_power = calculate_purchasing_power($unit, $wage);
         $text = "";
@@ -66,7 +69,7 @@ class Posts extends Component
         $month_in = $purchasing_power['month_in'];
 
         if ($month_in) {
-            $text = "1 ay içinde " . $month_in . " adet " . $product_name . " alınabilir.";
+            $text = "1 ay içinde " . $month_in . " " . $product_type . " " . $product_name . " alınabilir.";
         } else {
             if ($year) {
                 $text = $year . " " . ($month ? 'yıl&nbsp;' : 'yıl\'da ' . $product_name . ' alınabilir.');
@@ -93,9 +96,6 @@ class Posts extends Component
     {
         $this->post_id = null;
         $this->resetInputFields();
-        // Clean errors if were visible before
-        $this->resetErrorBag();
-        $this->resetValidation();
     }
 
     public function closeModal()
@@ -159,6 +159,7 @@ class Posts extends Component
                 $this->product[$country->country->id] = [
                     'name' => $country->product_name,
                     'unit' => $country->product_unit,
+                    'type' => $country->product_type,
                 ];
                 $new_countries[] = [
                     'id' => $country->country->id,
@@ -214,6 +215,7 @@ class Posts extends Component
                 'country_id' => $country['id'],
                 'product_name' => $m_unit['name'],
                 'product_unit' => $m_unit['unit'],
+                'product_type' => $m_unit['type'],
             ]);
         }
         session()->flash('message', 'Post Created Successfully.');
@@ -264,6 +266,7 @@ class Posts extends Component
             ], [
                 'product_name' => $m_unit['name'],
                 'product_unit' => $m_unit['unit'],
+                'product_type' => $m_unit['type'],
             ]);
             $current_p_country_ids[] = $post_country->country_id;
         }

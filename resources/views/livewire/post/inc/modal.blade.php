@@ -80,16 +80,21 @@
                             <legend class="post_salary">product unit</legend>
                             @foreach($countries as $key=>$country)
                                 <div class="form-group">
-                                    <label for="monthly_salary_{{$key}}">
+                                    <label for="product_{{$key}}">
                                         {{ $country['value'] }}
                                         (wage: {{ $country['current_wage'] }}{{ $country['currency'] }})
                                     </label>
-                                    <input type="number" class="form-control" id="monthly_salary_{{$key}}"
-                                           wire:model="product.{{$country['id']}}.unit" name="product[]"
-                                           placeholder="unit price">
-                                    <input type="text" class="form-control" id="monthly_salary_{{$key}}"
+                                    <input type="text" class="form-control" id="product_{{$key}}"
                                            wire:model="product.{{$country['id']}}.name" name="product[]"
                                            placeholder="product name">
+
+                                    <input type="number" class="form-control" id="product_unit_{{$key}}"
+                                           wire:model="product.{{$country['id']}}.unit" name="product[]"
+                                           placeholder="unit price">
+
+                                    <input type="text" class="form-control" id="product_type_{{$key}}"
+                                           wire:model="product.{{$country['id']}}.type" name="product[]"
+                                           placeholder="product type: kg, adet, litre">
                                 </div>
                             @endforeach
                         </fieldset>
@@ -97,10 +102,10 @@
                         <ul>
                             @foreach ($countries as $country)
                                 @if (key_exists($country['id'], $product))
-                                    @if(key_exists('name', $product[$country['id']]) and key_exists('unit', $product[$country['id']]))
+                                    @if(key_exists('name', $product[$country['id']]) and key_exists('unit', $product[$country['id']]) and key_exists('type', $product[$country['id']]))
                                         <li>
                                             {{ $country['value'] }} : {!! $this->calculate_purchasing_power(
-                                                                $product[$country['id']]['name'], $product[$country['id']]['unit'], $country['current_wage']
+                                                                $product[$country['id']]['name'], $product[$country['id']]['unit'], $product[$country['id']]['type'], $country['current_wage']
                                                                 ) !!}
                                         </li>
                                     @endif
