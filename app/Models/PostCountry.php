@@ -13,7 +13,7 @@ class PostCountry extends Model
 
     protected $table = 'post_country';
     protected $fillable = [
-        'post_id', 'country_id', 'product_name', 'product_unit'
+        'post_id', 'country_id', 'product_name', 'product_unit', 'product_type'
     ];
 
     public function country(): BelongsTo

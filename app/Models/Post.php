@@ -49,7 +49,7 @@ class Post extends Model
         $field = array_shift($exploded);
 
         return $query->whereHas('countries', function ($q) use ($field, $exploded) {
-            if ($field === 'product_unit' || $field === 'product_name') {
+            if ($field === 'product_unit' || $field === 'product_name' || $field === 'product_type') {
                 $q->where($field, 'LIKE', '%' . $exploded[0] . '%');
             } else {
                 $q->whereHas('country', function ($q) use ($field, $exploded) {
@@ -85,7 +85,7 @@ class Post extends Model
         $field = array_shift($exploded);
 
         return $query->whereHas('countries', function ($q) use ($field, $exploded) {
-            if ($field === 'product_unit' || $field === 'product_name') {
+            if ($field === 'product_unit' || $field === 'product_name' || $field === 'product_type') {
                 $q->whereIn($field, $exploded);
             } else {
                 $q->whereHas('country', function ($q) use ($field, $exploded) {
