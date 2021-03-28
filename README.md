@@ -66,3 +66,10 @@ method | endpoint | detail
 ?like=field,value1
 ?field=value
 ```
+___
+
+See Front-End Development Repository: [https://github.com/RadKod/kacbirim.com](https://github.com/RadKod/kacbirim.com)
+___
+CREATED BY
+
+[![RadKod](https://i.ibb.co/q5G6N0n/radkod-mail-imza.png)](https://www.radkod.com)
