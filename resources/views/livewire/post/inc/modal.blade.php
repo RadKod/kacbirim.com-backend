@@ -79,22 +79,32 @@
                         <fieldset class="post_salary">
                             <legend class="post_salary">product unit</legend>
                             @foreach($countries as $key=>$country)
-                                <div class="form-group">
-                                    <label for="product_{{$key}}">
-                                        {{ $country['value'] }}
-                                        (wage: {{ $country['current_wage'] }}{{ $country['currency'] }})
-                                    </label>
-                                    <input type="text" class="form-control" id="product_{{$key}}"
-                                           wire:model="product.{{$country['id']}}.name" name="product[]"
-                                           placeholder="product name">
-
-                                    <input type="number" class="form-control" id="product_unit_{{$key}}"
-                                           wire:model="product.{{$country['id']}}.unit" name="product[]"
-                                           placeholder="unit price">
-
-                                    <input type="text" class="form-control" id="product_type_{{$key}}"
-                                           wire:model="product.{{$country['id']}}.type" name="product[]"
-                                           placeholder="product type: kg, adet, litre">
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                            <div class="form-group">
+                                                <label for="product_{{$key}}">
+                                                    {{ $country['value'] }}
+                                                    (wage: {{ $country['current_wage'] }}{{ $country['currency'] }})
+                                                </label>
+                                                <input type="text" class="form-control" id="product_{{$key}}"
+                                                       wire:model="product.{{$country['id']}}.name" name="product[]"
+                                                       placeholder="product name">
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-6">
+                                                <input type="number" class="form-control" id="product_unit_{{$key}}"
+                                                       wire:model="product.{{$country['id']}}.unit" name="product[]"
+                                                       placeholder="unit price">
+                                            </div>
+                                            <div class="col-6">
+                                                <input type="text" class="form-control" id="product_type_{{$key}}"
+                                                       wire:model="product.{{$country['id']}}.type" name="product[]"
+                                                       placeholder="product type: kilogram, adet, litre, ...">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             @endforeach
                         </fieldset>
