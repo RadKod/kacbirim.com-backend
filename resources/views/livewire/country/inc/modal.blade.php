@@ -31,8 +31,9 @@
                     <div class="row">
                         <div class="col">
                             <div class="form-group">
-                                <label for="code">Code</label>
-                                <input type="text" class="form-control" wire:model="code" id="code" placeholder="Code">
+                                <label for="code">alpha-2 Code</label>
+                                <input type="text" class="form-control" wire:model="code" id="code"
+                                       placeholder="TR, DE, US, ..">
                                 @error('code') <span class="text-danger">{{ $message }}</span>@enderror
                             </div>
                         </div>
