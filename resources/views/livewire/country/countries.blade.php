@@ -16,6 +16,7 @@
             <th>Name</th>
             <th>Code</th>
             <th>Currency</th>
+            <th>Currency ISO Code</th>
             <th>Action</th>
         </tr>
         </thead>
@@ -26,6 +27,7 @@
                 <td>{{ $country->name }}</td>
                 <td>{{ $country->code }}</td>
                 <td>{{ $country->currency }}</td>
+                <td>{{ $country->currency_id }}</td>
                 <td>
                     <button data-toggle="modal" data-target="#crudModal_country" wire:click="edit({{ $country->id }})"
                             class="btn btn-primary btn-sm">Edit

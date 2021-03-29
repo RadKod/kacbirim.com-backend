@@ -10,26 +10,39 @@
             </div>
             <div class="modal-body">
                 <form>
-                    <div class="form-group">
-                        <input type="hidden" wire:model="country_id">
-                        <label for="name">Name</label>
-                        <input type="text" class="form-control" wire:model="name" id="name" placeholder="Name">
-                        @error('name') <span class="text-danger">{{ $message }}</span>@enderror
-                    </div>
                     <div class="row">
                         <div class="col">
-                            <div class="form-group">
-                                <label for="code">Code</label>
-                                <input type="text" class="form-control" wire:model="code" id="code" placeholder="Code">
-                                @error('code') <span class="text-danger">{{ $message }}</span>@enderror
-                            </div>
+                            <input type="hidden" wire:model="country_id">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" wire:model="name" id="name" placeholder="Name">
+                            @error('name') <span class="text-danger">{{ $message }}</span>@enderror
                         </div>
+
                         <div class="col">
                             <div class="form-group">
                                 <label for="currency">Currency symbol</label>
                                 <input type="text" class="form-control" wire:model="currency" id="currency"
                                        placeholder="Currency">
                                 @error('currency') <span class="text-danger">{{ $message }}</span>@enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="code">alpha-2 Code</label>
+                                <input type="text" class="form-control" wire:model="code" id="code"
+                                       placeholder="TR, DE, US, ..">
+                                @error('code') <span class="text-danger">{{ $message }}</span>@enderror
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="currency_id">Currency ISO Code</label>
+                                <input type="text" class="form-control" wire:model="currency_id" id="currency_id"
+                                       placeholder="Currency id: USD, TRY, ..">
+                                @error('currency_id') <span class="text-danger">{{ $message }}</span>@enderror
                             </div>
                         </div>
                     </div>

@@ -14,10 +14,10 @@ class Countries extends Model
     protected $filters = [
         'sort',
         'like',
-        'name', 'code', 'currency'
+        'name', 'code', 'currency', 'currency_id'
     ];
     protected $table = 'countries';
-    protected $fillable = ['name', 'code', 'currency'];
+    protected $fillable = ['name', 'code', 'currency', 'currency_id'];
     protected $appends = ['current_wage'];
     protected $hidden = ['country_wages', 'created_at', 'updated_at'];
 
