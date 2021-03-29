@@ -39,4 +39,3 @@ if (!function_exists('calculate_purchasing_power')) {
         return $return_array;
     }
 }
-

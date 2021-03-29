@@ -16,7 +16,7 @@ class Countries extends Component
     public $wage_list = [];
     public $wage_delete_list = [];
     public $wage_year, $wage_wage;
-    public $name, $code, $currency, $country_id, $confirming;
+    public $name, $code, $currency, $currency_id, $country_id, $confirming;
     public $updateMode = false;
 
     public function mount()
@@ -76,10 +76,15 @@ class Countries extends Component
         $this->name = '';
         $this->code = '';
         $this->currency = '';
+        $this->currency_id = '';
         $this->wage_list = [];
         $this->wage_delete_list = [];
         $this->wage_year = null;
         $this->wage_wage = null;
+
+        // Clean errors if were visible before
+        $this->resetErrorBag();
+        $this->resetValidation();
     }
 
     public function confirmDelete($id)
@@ -92,7 +97,8 @@ class Countries extends Component
         $validatedDate = $this->validate([
             'name' => 'required|unique:countries,name',
             'code' => 'required|unique:countries,code',
-            'currency' => 'required'
+            'currency' => 'required',
+            'currency_id' => 'required'
         ]);
 
         $country = CountriesModel::query()->create($validatedDate);
@@ -120,6 +126,7 @@ class Countries extends Component
         $this->name = $country->name;
         $this->code = $country->code;
         $this->currency = $country->currency;
+        $this->currency_id = $country->currency_id;
         foreach ($country->country_wages as $country_wage) {
             $this->wage_list[] = [
                 'year' => $country_wage->year,
@@ -145,9 +152,6 @@ class Countries extends Component
     {
         $this->country_id = null;
         $this->resetInputFields();
-        // Clean errors if were visible before
-        $this->resetErrorBag();
-        $this->resetValidation();
     }
 
     public function update()
@@ -155,7 +159,8 @@ class Countries extends Component
         $validatedData = $this->validate([
             'name' => 'required|unique:countries,name,' . $this->country_id,
             'code' => 'required|unique:countries,code,' . $this->country_id,
-            'currency' => 'required'
+            'currency' => 'required',
+            'currency_id' => 'required'
         ]);
         $country = CountriesModel::query()->find($this->country_id);
         $country->update($validatedData);

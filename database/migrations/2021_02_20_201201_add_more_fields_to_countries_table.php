@@ -15,6 +15,7 @@ class AddMoreFieldsToCountriesTable extends Migration
     {
         Schema::table('countries', function (Blueprint $table) {
             $table->string('currency');
+            $table->string('currency_id');
         });
     }
 

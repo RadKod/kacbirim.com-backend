@@ -25,7 +25,7 @@ class CountryResource extends JsonResource
                 'product_unit' => $this->product_unit,
                 'product_type' => $this->product_type,
                 'wage' => $this->current_wage,
-                'purchasing_power' => calculate_purchasing_power($this->product_unit, $this->current_wage),
+                'purchasing_power' => calculate_purchasing_power($this->product_unit, $this->current_wage)
             ];
         }
 
