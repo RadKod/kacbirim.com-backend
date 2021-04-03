@@ -12,7 +12,7 @@ class CountryWage extends Model
 
     protected $table = 'country_wage';
     protected $fillable = [
-        'country_id', 'year', 'wage'
+        'country_id', 'year', 'wage', 'minimum_wage_percentage', 'wage_type'
     ];
 
     public function country(): BelongsTo

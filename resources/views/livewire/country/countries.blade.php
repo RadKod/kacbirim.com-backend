@@ -1,5 +1,5 @@
 <div>
-    <button type="button" class="btn btn-primary" wire:click="openModal()"
+    <button type="button" class="btn btn-primary" {{--wire:click="openModal()"--}}
             data-toggle="modal" data-target="#crudModal_country">
         Create
     </button>
@@ -9,7 +9,10 @@
             {{ session('message') }}
         </div>
     @endif
-    <table class="table table-bordered mt-5">
+    <input type="text" wire:model="search_term" class="col-2 form-control mt-3"
+           placeholder="Search name.."
+    />
+    <table class="table table-bordered mt-1">
         <thead>
         <tr>
             <th>ID</th>

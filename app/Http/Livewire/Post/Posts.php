@@ -20,6 +20,7 @@ class Posts extends Component
 
     protected $paginationTheme = 'bootstrap';
 
+    public $search_term;
     public $post_image = null;
     public $tags = [];
     public $product = [];
@@ -33,8 +34,10 @@ class Posts extends Component
 
     public function render()
     {
+        $search_term = '%'.$this->search_term.'%';
         $countries_data = Countries::query()->get();
         $posts = PostModel::query()
+            ->where('title', 'like', $search_term)
             ->orderBy('id', 'desc')->paginate(10);
         return view('livewire.post.posts', [
             'countries_data' => $countries_data,
@@ -166,7 +169,7 @@ class Posts extends Component
                     'value' => $country->country->name,
                     'code' => $country->country->code,
                     'currency' => $country->country->currency,
-                    'current_wage' => $country->current_wage,
+                    'current_wage' => $country->current_wage_info['wage'],
                 ];
             }
             foreach ($post->tags as $tag) {
