@@ -97,8 +97,10 @@ class Posts extends Component
 
     public function openModal()
     {
-        $this->post_id = null;
-        $this->resetInputFields();
+        if ($this->post_id){
+            $this->post_id = null;
+            $this->resetInputFields();
+        }
     }
 
     public function closeModal()
@@ -169,7 +171,7 @@ class Posts extends Component
                     'value' => $country->country->name,
                     'code' => $country->country->code,
                     'currency' => $country->country->currency,
-                    'current_wage' => $country->current_wage_info['wage'],
+                    'current_wage' => $country->current_wage_info
                 ];
             }
             foreach ($post->tags as $tag) {
