@@ -26,13 +26,19 @@ class PostCountry extends Model
         return $this->belongsTo(Post::class, 'post_id', 'id');
     }
 
-    public function getCurrentWageAttribute(): ?int
+    public function getCurrentWageInfoAttribute(): array
     {
-        $return_wage = null;
+        $return_wage = [
+            'wage' => '',
+            'minimum_wage_percentage' => '',
+            'wage_type' => ''
+        ];
         $post_year = substr($this->post->comparison_date, 0, 4);
         $wage = $this->country->country_wages->firstWhere('year', $post_year);
         if ($wage) {
-            $return_wage = $wage->wage;
+            $return_wage['wage'] = $wage->wage;
+            $return_wage['minimum_wage_percentage'] = $wage->minimum_wage_percentage;
+            $return_wage['wage_type'] = $wage->wage_type;
         }
         return $return_wage;
     }

@@ -7,17 +7,20 @@ use App\Http\Resources\PostCollection;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
     /**
+     * @param Request $request
      * @return PostCollection
      */
-    public function index(): PostCollection
+    public function index(Request $request): PostCollection
     {
-        $posts = Post::with([
+        $paginate = $request->get('limit') ?: 15;
+        $posts = Post::query()->with([
             'tags', 'countries', 'tags.tag', 'countries.country', 'countries.country.country_wages'
-        ])->filter()->paginate()->appends(request()->except('page'));
+        ])->filter()->paginate($paginate)->appends(request()->except('page'));
         return new PostCollection($posts);
     }
 

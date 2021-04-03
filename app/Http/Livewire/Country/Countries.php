@@ -13,9 +13,11 @@ class Countries extends Component
 
     protected $paginationTheme = 'bootstrap';
 
+    public $search_term;
     public $wage_list = [];
     public $wage_delete_list = [];
-    public $wage_year, $wage_wage;
+    public $wage_type = 1;
+    public $wage_year, $wage_wage, $minimum_wage_percentage;
     public $name, $code, $currency, $currency_id, $country_id, $confirming;
     public $updateMode = false;
 
@@ -28,9 +30,11 @@ class Countries extends Component
         $this->validate([
             'wage_year' => 'required|digits:4|integer|min:2021',
             'wage_wage' => 'required|integer',
+            'minimum_wage_percentage' => 'required|integer',
+            'wage_type' => 'required|integer',
         ]);
 
-        if ($this->wage_year && $this->wage_wage) {
+        if ($this->wage_year && $this->wage_wage && $this->minimum_wage_percentage && $this->wage_type) {
             foreach ($this->wage_list as $sub_array) {
                 if ($sub_array['year'] == $this->wage_year) {
                     $this->addError('wage_year', 'year already added');
@@ -40,10 +44,14 @@ class Countries extends Component
 
             $this->wage_list[] = [
                 'year' => $this->wage_year,
-                'wage' => $this->wage_wage
+                'wage' => $this->wage_wage,
+                'minimum_wage_percentage' => $this->minimum_wage_percentage,
+                'wage_type' => $this->wage_type
             ];
             $this->wage_year = null;
             $this->wage_wage = null;
+            $this->minimum_wage_percentage = null;
+            $this->wage_type = 1;
 
             return true;
         }
@@ -64,7 +72,9 @@ class Countries extends Component
 
     public function render()
     {
+        $search_term = '%'.$this->search_term.'%';
         $countries = CountriesModel::query()
+            ->where('name', 'like', $search_term)
             ->orderBy('id', 'desc')->paginate(10);
         return view('livewire.country.countries', [
             'countries' => $countries
@@ -81,6 +91,8 @@ class Countries extends Component
         $this->wage_delete_list = [];
         $this->wage_year = null;
         $this->wage_wage = null;
+        $this->minimum_wage_percentage = null;
+        $this->wage_type = null;
 
         // Clean errors if were visible before
         $this->resetErrorBag();
@@ -107,7 +119,9 @@ class Countries extends Component
             CountryWage::query()->firstOrCreate([
                 'country_id' => $country->id,
                 'year' => $wage_item['year'],
-                'wage' => $wage_item['wage']
+                'wage' => $wage_item['wage'],
+                'minimum_wage_percentage' => $wage_item['minimum_wage_percentage'],
+                'wage_type' => $wage_item['wage_type']
             ]);
         }
         session()->flash('message', 'Country Created Successfully.');
@@ -130,7 +144,9 @@ class Countries extends Component
         foreach ($country->country_wages as $country_wage) {
             $this->wage_list[] = [
                 'year' => $country_wage->year,
-                'wage' => $country_wage->wage
+                'wage' => $country_wage->wage,
+                'minimum_wage_percentage' => $country_wage->minimum_wage_percentage,
+                'wage_type' => $country_wage->wage_type
             ];
         }
     }
@@ -169,7 +185,9 @@ class Countries extends Component
             $c_w = CountryWage::query()->firstOrCreate([
                 'country_id' => $country->id,
                 'year' => $wage_item['year'],
-                'wage' => $wage_item['wage']
+                'wage' => $wage_item['wage'],
+                'minimum_wage_percentage' => $wage_item['minimum_wage_percentage'],
+                'wage_type' => $wage_item['wage_type']
             ]);
             $current_wage_ids[] = $c_w->id;
         }

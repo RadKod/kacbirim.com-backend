@@ -29,6 +29,7 @@ method | endpoint | detail
 `api/v1/posts` parameters:
 
 ```
+?limit=15
 ?greater=field,value
 ?greater_or_equal=field,value
 ?less=field,value
@@ -50,6 +51,7 @@ method | endpoint | detail
 `api/v1/countries` parameters:
 
 ```
+?limit=15
 ?sort=field
 ?sort=field,sort_type
 ?sort[0]=field1&sort[1]=field2
@@ -60,6 +62,7 @@ method | endpoint | detail
 `api/v1/tags` parameters:
 
 ```
+?limit=15
 ?sort=field
 ?sort=field,sort_type
 ?sort[0]=field1&sort[1]=field2

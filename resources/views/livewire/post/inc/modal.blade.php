@@ -9,7 +9,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <ul>
+                <form>
                     <input type="hidden" wire:model="post_id">
 
                     <div class="form-row">
@@ -122,13 +122,13 @@
                                 @endif
                             @endforeach
                         </ul>
-                        @endif
-                        </form>
+                    @endif
+                </form>
             </div>
 
             <div class="modal-footer">
                 <button type="button" wire:click.prevent="cancel()" class="btn btn-secondary" data-dismiss="modal">
-                    Close
+                    Close & Reset
                 </button>
                 <button type="button" wire:click.prevent="create_or_update()" class="btn btn-primary">Save changes
                 </button>

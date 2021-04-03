@@ -10,11 +10,13 @@ use Illuminate\Http\Request;
 class CountryController extends Controller
 {
     /**
+     * @param Request $request
      * @return CountryCollection
      */
-    public function index(): CountryCollection
+    public function index(Request $request): CountryCollection
     {
-        $posts = Countries::filter()->paginate()->appends(request()->except('page'));
-        return new CountryCollection($posts);
+        $paginate = $request->get('limit') ?: 15;
+        $countries = Countries::filter()->paginate($paginate)->appends(request()->except('page'));
+        return new CountryCollection($countries);
     }
 }

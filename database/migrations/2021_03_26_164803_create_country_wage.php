@@ -16,7 +16,7 @@ class CreateCountryWage extends Migration
         Schema::create('country_wage', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('country_id');
-            $table->date('year');
+            $table->integer('year');
             $table->integer('wage');
             $table->timestamps();
             // foreign keys
