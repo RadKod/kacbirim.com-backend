@@ -85,7 +85,7 @@
                                             <div class="form-group">
                                                 <label for="product_{{$key}}">
                                                     {{ $country['value'] }}
-                                                    (wage: {{ $country['current_wage'] }}{{ $country['currency'] }})
+                                                    ({{ \App\Helpers\wage_type_decode($country['current_wage']['wage_type']) }}: {{ $country['current_wage']['wage'] }}{{ $country['currency'] }})
                                                 </label>
                                                 <input type="text" class="form-control" id="product_{{$key}}"
                                                        wire:model="product.{{$country['id']}}.name" name="product[]"
@@ -115,8 +115,10 @@
                                     @if(key_exists('name', $product[$country['id']]) and key_exists('unit', $product[$country['id']]) and key_exists('type', $product[$country['id']]))
                                         <li>
                                             {{ $country['value'] }} : {!! $this->calculate_purchasing_power(
-                                                                $product[$country['id']]['name'], $product[$country['id']]['unit'], $product[$country['id']]['type'], $country['current_wage']
+                                                                $product[$country['id']]['name'], $product[$country['id']]['unit'], $product[$country['id']]['type'], $country['current_wage']['wage']
                                                                 ) !!}
+                                            <br>
+                                            Halkın {{ $country['current_wage']['minimum_wage_percentage'] }}%'si asgari ücretle çalışıyor.
                                         </li>
                                     @endif
                                 @endif

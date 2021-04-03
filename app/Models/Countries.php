@@ -26,13 +26,19 @@ class Countries extends Model
         return $this->hasMany(CountryWage::class, 'country_id', 'id');
     }
 
-    public function getCurrentWageAttribute(): ?int
+    public function getCurrentWageAttribute(): array
     {
-        $return_wage = null;
         $post_year = substr(date('Y'), 0, 4);
+        $return_wage = [
+            'wage' => '',
+            'minimum_wage_percentage' => '',
+            'wage_type' => ''
+        ];
         $wage = $this->country_wages->firstWhere('year', $post_year);
         if ($wage) {
-            $return_wage = $wage->wage;
+            $return_wage['wage'] = $wage->wage;
+            $return_wage['minimum_wage_percentage'] = $wage->minimum_wage_percentage;
+            $return_wage['wage_type'] = $wage->wage_type;
         }
         return $return_wage;
     }

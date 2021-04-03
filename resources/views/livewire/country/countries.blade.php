@@ -1,5 +1,5 @@
 <div>
-    <button type="button" class="btn btn-primary" {{--wire:click="openModal()"--}}
+    <button type="button" class="btn btn-primary" wire:click="openModal()"
             data-toggle="modal" data-target="#crudModal_country">
         Create
     </button>

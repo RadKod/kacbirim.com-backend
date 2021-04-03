@@ -166,8 +166,10 @@ class Countries extends Component
 
     public function openModal()
     {
-        $this->country_id = null;
-        $this->resetInputFields();
+        if($this->country_id){
+            $this->country_id = null;
+            $this->resetInputFields();
+        }
     }
 
     public function update()
