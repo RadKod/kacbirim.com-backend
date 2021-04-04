@@ -118,7 +118,7 @@
                                                                 $product[$country['id']]['name'], $product[$country['id']]['unit'], $product[$country['id']]['type'], $country['current_wage']['wage']
                                                                 ) !!}
                                             <br>
-                                            Halkın {{ $country['current_wage']['minimum_wage_percentage'] }}%'si asgari ücretle çalışıyor.
+                                            Asgari ücretli çalışan oranı: {{ $country['current_wage']['minimum_wage_percentage'] }}%
                                         </li>
                                     @endif
                                 @endif
