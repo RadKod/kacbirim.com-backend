@@ -118,7 +118,7 @@
                                         <td>{{ $wage_item['year'] }}</td>
                                         <td>{{ $wage_item['wage'] }} {{$currency}}</td>
                                         <td>{{ $wage_item['minimum_wage_percentage'] }}%</td>
-                                        <td>{{ $wage_item['wage_type'] ? \App\Helpers\wage_type_decode($wage_item['wage_type']) : '' }}</td>
+                                        <td>{{ \App\Helpers\wage_type_decode($wage_item['wage_type']) }}</td>
                                         <td>
                                             <span wire:click="delete_wage({{ $wage_key }})"
                                                   class="btn btn-sm btn-danger">
@@ -148,7 +148,7 @@
                                             <td>{{ $wage_item['year'] }}</td>
                                             <td>{{ $wage_item['wage'] }} {{$currency}}</td>
                                             <td>{{ $wage_item['minimum_wage_percentage'] }}%</td>
-                                            <td>{{ $wage_item['wage_type'] ?: \App\Helpers\wage_type_decode($wage_item['wage_type']) }}</td>
+                                            <td>{{ \App\Helpers\wage_type_decode($wage_item['wage_type']) }}</td>
                                             <td>
                                             <span wire:click="undo_wage({{ $wage_key }})"
                                                   class="btn btn-sm btn-primary">
