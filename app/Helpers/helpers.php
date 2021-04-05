@@ -28,12 +28,12 @@ if (!function_exists('calculate_purchasing_power')) {
                 if (!is_float($i / 12)) {
                     $years = floor($i / 12);
                 }
-                $months = ceil($i % 12);
+                $months = floor($i % 12);
             }
             $return_array['year'] = $years ?: null;
             $return_array['month'] = $months;
         } else {
-            $return_array['month_in'] = round($wage / $unit);
+            $return_array['month_in'] = floor($wage / $unit);
         }
 
         return $return_array;
