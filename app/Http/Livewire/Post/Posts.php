@@ -75,10 +75,10 @@ class Posts extends Component
             $text = "1 ay içinde " . $month_in . " " . $product_type . " " . $product_name . " alınabilir.";
         } else {
             if ($year) {
-                $text = $year . " " . ($month ? 'yıl&nbsp;' : 'yıl\'da ' . $product_name . ' alınabilir.');
+                $text = $year . " " . ($month ? 'yıl&nbsp;' : 'yılda ' . $product_name . ' alınabilir.');
             }
             if ($month) {
-                $text .= $month . " ay'da " . $product_name . " alınabilir.";
+                $text .= $month . " ayda " . $product_name . " alınabilir.";
             }
         }
         return $text;
