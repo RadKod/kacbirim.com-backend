@@ -36,7 +36,7 @@ class Post extends Model
 
         return $query->whereHas('tags', function ($q) use ($field, $exploded) {
             $q->whereHas('tag', function ($q) use ($field, $exploded) {
-                $q->where($field, 'LIKE', '%' . $exploded[0] . '%');
+                $q->where($field, 'LIKE', '%' . $exploded. '%');
             });
         });
     }
@@ -48,15 +48,15 @@ class Post extends Model
 
         return $query->whereHas('countries', function ($q) use ($field, $exploded) {
             if ($field === 'product_unit' || $field === 'product_name' || $field === 'product_type') {
-                $q->where($field, 'LIKE', '%' . $exploded[0] . '%');
+                $q->where($field, 'LIKE', '%' . $exploded . '%');
             } else {
                 $q->whereHas('country', function ($q) use ($field, $exploded) {
                     if ($field === 'wage') {
                         $q->whereHas('country_wages', function ($q) use ($field, $exploded) {
-                            $q->where($field, 'LIKE', '%' . $exploded[0] . '%');
+                            $q->where($field, 'LIKE', '%' . $exploded . '%');
                         });
                     } else {
-                        $q->where($field, 'LIKE', '%' . $exploded[0] . '%');
+                        $q->where($field, 'LIKE', '%' . $exploded . '%');
                     }
                 });
             }
@@ -97,11 +97,12 @@ class Post extends Model
             }
         });
     }
-    
-    protected function get_field_and_values($value) {
+
+    protected function get_field_and_values($value): array
+    {
         $exploded = explode(',', $value);
         $field = array_shift($exploded);
-        
+
         return [$field, (key_exists(0, $exploded) ? $exploded[0] : null)];
     }
 
