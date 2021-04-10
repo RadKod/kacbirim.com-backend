@@ -34,6 +34,8 @@ class Post extends Model
 
         $exploded = explode(',', $value);
         $field = array_shift($exploded);
+        
+        if (!key_exists(0, $exploded)) return $query;
 
         return $query->whereHas('tags', function ($q) use ($field, $exploded) {
             $q->whereHas('tag', function ($q) use ($field, $exploded) {
