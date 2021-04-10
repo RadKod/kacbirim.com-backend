@@ -31,11 +31,8 @@ class Post extends Model
 
     public function tags_like($query, $value)
     {
-
-        $exploded = explode(',', $value);
-        $field = array_shift($exploded);
-        
-        if (!key_exists(0, $exploded)) return $query;
+        [$field, $value] = $this->get_field_and_values($value);
+        if (!$value) return $query;
 
         return $query->whereHas('tags', function ($q) use ($field, $exploded) {
             $q->whereHas('tag', function ($q) use ($field, $exploded) {
@@ -46,9 +43,8 @@ class Post extends Model
 
     public function products_countries_like($query, $value)
     {
-
-        $exploded = explode(',', $value);
-        $field = array_shift($exploded);
+        [$field, $value] = $this->get_field_and_values($value);
+        if (!$value) return $query;
 
         return $query->whereHas('countries', function ($q) use ($field, $exploded) {
             if ($field === 'product_unit' || $field === 'product_name' || $field === 'product_type') {
@@ -69,9 +65,8 @@ class Post extends Model
 
     public function tags_in($query, $value)
     {
-
-        $exploded = explode(',', $value);
-        $field = array_shift($exploded);
+        [$field, $value] = $this->get_field_and_values($value);
+        if (!$value) return $query;
 
         return $query->whereHas('tags', function ($q) use ($field, $exploded) {
             $q->whereHas('tag', function ($q) use ($field, $exploded) {
@@ -83,8 +78,8 @@ class Post extends Model
     public function products_countries_in($query, $value)
     {
 
-        $exploded = explode(',', $value);
-        $field = array_shift($exploded);
+        [$field, $value] = $this->get_field_and_values($value);
+        if (!$value) return $query;
 
         return $query->whereHas('countries', function ($q) use ($field, $exploded) {
             if ($field === 'product_unit' || $field === 'product_name' || $field === 'product_type') {
@@ -101,6 +96,13 @@ class Post extends Model
                 });
             }
         });
+    }
+    
+    protected function get_field_and_values($value) {
+        $exploded = explode(',', $value);
+        $field = array_shift($exploded);
+        
+        return [$field, (key_exists(0, $exploded) ? $exploded[0] : null)];
     }
 
     public function countries(): HasMany
