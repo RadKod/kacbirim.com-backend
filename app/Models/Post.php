@@ -31,34 +31,32 @@ class Post extends Model
 
     public function tags_like($query, $value)
     {
-
-        $exploded = explode(',', $value);
-        $field = array_shift($exploded);
+        [$field, $exploded] = $this->get_field_and_values($value);
+        if (!$exploded) return $query;
 
         return $query->whereHas('tags', function ($q) use ($field, $exploded) {
             $q->whereHas('tag', function ($q) use ($field, $exploded) {
-                $q->where($field, 'LIKE', '%' . $exploded[0] . '%');
+                $q->where($field, 'LIKE', '%' . $exploded. '%');
             });
         });
     }
 
     public function products_countries_like($query, $value)
     {
-
-        $exploded = explode(',', $value);
-        $field = array_shift($exploded);
+        [$field, $exploded] = $this->get_field_and_values($value);
+        if (!$exploded) return $query;
 
         return $query->whereHas('countries', function ($q) use ($field, $exploded) {
             if ($field === 'product_unit' || $field === 'product_name' || $field === 'product_type') {
-                $q->where($field, 'LIKE', '%' . $exploded[0] . '%');
+                $q->where($field, 'LIKE', '%' . $exploded . '%');
             } else {
                 $q->whereHas('country', function ($q) use ($field, $exploded) {
                     if ($field === 'wage') {
                         $q->whereHas('country_wages', function ($q) use ($field, $exploded) {
-                            $q->where($field, 'LIKE', '%' . $exploded[0] . '%');
+                            $q->where($field, 'LIKE', '%' . $exploded . '%');
                         });
                     } else {
-                        $q->where($field, 'LIKE', '%' . $exploded[0] . '%');
+                        $q->where($field, 'LIKE', '%' . $exploded . '%');
                     }
                 });
             }
@@ -67,9 +65,8 @@ class Post extends Model
 
     public function tags_in($query, $value)
     {
-
-        $exploded = explode(',', $value);
-        $field = array_shift($exploded);
+        [$field, $exploded] = $this->get_field_and_values($value);
+        if (!$exploded) return $query;
 
         return $query->whereHas('tags', function ($q) use ($field, $exploded) {
             $q->whereHas('tag', function ($q) use ($field, $exploded) {
@@ -81,8 +78,8 @@ class Post extends Model
     public function products_countries_in($query, $value)
     {
 
-        $exploded = explode(',', $value);
-        $field = array_shift($exploded);
+        [$field, $exploded] = $this->get_field_and_values($value);
+        if (!$exploded) return $query;
 
         return $query->whereHas('countries', function ($q) use ($field, $exploded) {
             if ($field === 'product_unit' || $field === 'product_name' || $field === 'product_type') {
@@ -99,6 +96,14 @@ class Post extends Model
                 });
             }
         });
+    }
+
+    protected function get_field_and_values($value): array
+    {
+        $exploded = explode(',', $value);
+        $field = array_shift($exploded);
+
+        return [$field, (key_exists(0, $exploded) ? $exploded[0] : null)];
     }
 
     public function countries(): HasMany
