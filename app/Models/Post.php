@@ -31,8 +31,8 @@ class Post extends Model
 
     public function tags_like($query, $value)
     {
-        [$field, $value] = $this->get_field_and_values($value);
-        if (!$value) return $query;
+        [$field, $exploded] = $this->get_field_and_values($value);
+        if (!$exploded) return $query;
 
         return $query->whereHas('tags', function ($q) use ($field, $exploded) {
             $q->whereHas('tag', function ($q) use ($field, $exploded) {
@@ -43,8 +43,8 @@ class Post extends Model
 
     public function products_countries_like($query, $value)
     {
-        [$field, $value] = $this->get_field_and_values($value);
-        if (!$value) return $query;
+        [$field, $exploded] = $this->get_field_and_values($value);
+        if (!$exploded) return $query;
 
         return $query->whereHas('countries', function ($q) use ($field, $exploded) {
             if ($field === 'product_unit' || $field === 'product_name' || $field === 'product_type') {
@@ -65,8 +65,8 @@ class Post extends Model
 
     public function tags_in($query, $value)
     {
-        [$field, $value] = $this->get_field_and_values($value);
-        if (!$value) return $query;
+        [$field, $exploded] = $this->get_field_and_values($value);
+        if (!$exploded) return $query;
 
         return $query->whereHas('tags', function ($q) use ($field, $exploded) {
             $q->whereHas('tag', function ($q) use ($field, $exploded) {
@@ -78,8 +78,8 @@ class Post extends Model
     public function products_countries_in($query, $value)
     {
 
-        [$field, $value] = $this->get_field_and_values($value);
-        if (!$value) return $query;
+        [$field, $exploded] = $this->get_field_and_values($value);
+        if (!$exploded) return $query;
 
         return $query->whereHas('countries', function ($q) use ($field, $exploded) {
             if ($field === 'product_unit' || $field === 'product_name' || $field === 'product_type') {
